@@ -4,6 +4,8 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
+        // Define keys
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         // menu text configuration
         let menuConfig = {
             fontFamily: 'Courier',
@@ -18,10 +20,11 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
       // show menu text
-      this.add.text(50, 20, 'Menu', menuConfig).setOrigin(0.5);
+      this.add.text(20, 20, 'Menu', menuConfig);
+      this.add.text(20, 80, 'Press start to go to Play scene', menuConfig);
     }
 
     update() {
-
+        if(Phaser.Input.Keyboard.JustDown(keySPACE)) this.scene.start('playScene');
     }
 }

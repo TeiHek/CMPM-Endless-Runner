@@ -10,3 +10,5 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
+// Reserve key names
+let keySPACE;
