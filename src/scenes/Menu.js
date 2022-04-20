@@ -19,9 +19,17 @@ class Menu extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-      // show menu text
-      this.add.text(20, 20, 'Menu', menuConfig);
-      this.add.text(20, 80, 'Press start to go to Play scene', menuConfig);
+        // show menu text
+        this.add.text(20, 20, 'Menu', menuConfig);
+        this.add.text(20, 80, 'Press space to go to Play scene', menuConfig);
+        game.settings = {
+            //platformStartSpeed: 350,
+            //spawnRange: [100, 350],
+            //platformSizeRange: [50, 250],
+            playerGravity: 900,
+            jumpForce: 400,
+            playerStartPosition: 200
+        }
     }
 
     update() {
