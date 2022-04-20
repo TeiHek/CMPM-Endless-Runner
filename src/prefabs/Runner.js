@@ -8,10 +8,11 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
 
     create() {
        
-        //this.setVelocityY(game.settings.jumpForce)
     }
 
     update() {
-        console.log(this.y);
+        // console.log(this.y);
+        // TODO: Check jump eligibility
+        if(Phaser.Input.Keyboard.JustDown(keyUP)) this.setVelocityY(game.settings.jumpForce * -1)
     }
 }
