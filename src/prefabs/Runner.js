@@ -3,7 +3,6 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame);
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setGravityY(game.settings.playerGravity);
     }
 
     create() {
@@ -12,7 +11,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         // console.log(this.y);
-        // TODO: Check jump eligibility
-        if(Phaser.Input.Keyboard.JustDown(keyUP)) this.setVelocityY(game.settings.jumpForce * -1)
+        // Jumping
+        if(Phaser.Input.Keyboard.JustDown(keyUP) && this.body.touching.down) this.setVelocityY(game.settings.jumpForce * -1)
     }
 }

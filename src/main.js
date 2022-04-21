@@ -8,10 +8,20 @@ let config = {
         forceSetTimeOut: true
     },
     physics: {
-        default: "arcade"
+        default: "arcade",
+        arcade: {
+            gravity: { y: 900 },
+            debug: true
+        }
     }
 }
 
 let game = new Phaser.Game(config);
 // Reserve key names
 let keySPACE, keyUP;
+
+// Priority list, temporary
+// 1 (high): Jumping, Obstacles to jump over, simple obstacle collision handling
+// Also 1  : Figure out control scheme and additional buttons
+// 2       : Sliding?, Obstacles to slide under, difficulty scaling/objects speeding up
+// 5       : Button matching minigame to clear collided obstacles
