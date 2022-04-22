@@ -14,6 +14,7 @@ class Play extends Phaser.Scene {
     // Define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     let tempConfig = {
       fontFamily: 'Courier',
       fontSize: '28px',
@@ -63,7 +64,10 @@ class Play extends Phaser.Scene {
     //console.log(this.activeObstacleGroup.getLength() + ", " + this.obstaclePool.getLength())
     //if(this.obstaclePool.getLength() && !this.gameOver) this.addObstacle(1, game.config.width);
     //console.log(time + ", Delta:" + delta);
-    console.log(this.runner.isSliding);
+    //console.log(this.runner.isSliding);
+    // Scene Swapping on game over
+    if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) this.scene.start('menuScene');
+
     if(!this.gameOver) {
       this.runner.update();
       if(this.activeObstacleGroup.getLength() == 0){
@@ -86,10 +90,10 @@ class Play extends Phaser.Scene {
   addObstacle(speedMod, posX, placeholder = true) {
     let obstacle;
     if(Phaser.Math.Between(0,1)) {
-      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'slideObs').setOrigin(0.5); // NOTE: 100 is placeholder value
+      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*4.5, 'slideObs').setOrigin(0.5); // NOTE: Y param is placeholder value
       obstacle.canSlide = true;
     } else {
-      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'jumpObs').setOrigin(0.5); // NOTE: 100 is placeholder value
+      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'jumpObs').setOrigin(0.5); // NOTE: Y param is placeholder value
       obstacle.canSlide = false;
     }
     // console.log(obstacle.body.velocity);

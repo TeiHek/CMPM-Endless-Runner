@@ -11,14 +11,14 @@ let config = {
         default: "arcade",
         arcade: {
             gravity: { y: 2000 },
-            debug: true
+            debug: false
         }
     }
 }
 
 let game = new Phaser.Game(config);
 // Reserve key names
-let keySPACE, keyUP, keyDOWN;
+let keySPACE, keyUP, keyDOWN, keyLEFT;
 
 // Priority list, temporary
 // 1 (high): Jumping, Obstacles to jump over, simple obstacle collision handling
