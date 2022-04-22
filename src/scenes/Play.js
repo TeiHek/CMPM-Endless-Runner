@@ -64,16 +64,28 @@ class Play extends Phaser.Scene {
     this.physics.add.overlap(this.runner, this.activeObstacleGroup, this.handleCollision, null, this);
     // Create first obstacle
     this.addObstacle(1, game.config.width);
+    // Time since last obstacle, for "random" spawns
+    this.timeSinceLastObstacle = 0
+    // Incrementing numbers for obstacle spawns
+    this.speedMod = 1;
     // Game Over state
     this.gameOver = false;
+    // Scaling speed timer
+    this.speedScaling = this.time.addEvent({ delay: game.settings.obstacleScaleTime, callback: () => {
+      this.speedMod += game.settings.obstacleSpeedScale
+    }, callbackScope: null, loop: !this.gameOver});
   }
 
   update(time, delta) {
-    console.log(this.activeObstacleGroup.getLength() + ", " + this.obstaclePool.getLength())
-    if(this.obstaclePool.getLength() && !this.gameOver) this.addObstacle(1, game.config.width);
+    //console.log(this.activeObstacleGroup.getLength() + ", " + this.obstaclePool.getLength())
+    //if(this.obstaclePool.getLength() && !this.gameOver) this.addObstacle(1, game.config.width);
     //console.log(time + ", Delta:" + delta);
     if(!this.gameOver) {
       this.runner.update();
+      if(this.activeObstacleGroup.getLength() == 0){
+        this.addObstacle(this.speedMod, game.config.width);
+      }
+      this.cleanOffscreen()
     }
   }
 
@@ -86,7 +98,6 @@ class Play extends Phaser.Scene {
   addObstacle(speedMod, posX, placeholder = true) {
     let obstacle;
     if(this.obstaclePool.getLength()) { // True if not empty
-      // Section works!
       let obsNum = Phaser.Math.Between(0, this.obstaclePool.getLength() - 1)
       obstacle = this.obstaclePool.getChildren()[obsNum];
       this.obstaclePool.remove(obstacle);
@@ -109,5 +120,13 @@ class Play extends Phaser.Scene {
     this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
     this.activeObstacleGroup.killAndHide(obstacle);
     this.activeObstacleGroup.remove(obstacle);
+  }
+
+  cleanOffscreen() {
+    let front = this.activeObstacleGroup.getFirstAlive()
+    if(front && front.x < 0) {
+      this.activeObstacleGroup.killAndHide(front);
+      this.activeObstacleGroup.remove(front);
+    }
   }
 }

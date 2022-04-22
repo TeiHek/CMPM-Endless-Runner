@@ -23,9 +23,11 @@ class Menu extends Phaser.Scene {
         this.add.text(20, 20, 'Menu', menuConfig);
         this.add.text(20, 80, 'Press space to go to Play scene', menuConfig);
         game.settings = {
-            jumpForce: 400,
+            jumpForce: 800,
             playerStartPosition: 200,
-            obstacleBaseSpeed: 202
+            obstacleBaseSpeed: 400,
+            obstacleSpeedScale: 0.1,
+            obstacleScaleTime: 3000,
         }
     }
 
