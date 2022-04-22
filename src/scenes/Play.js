@@ -6,12 +6,14 @@ class Play extends Phaser.Scene {
   preload() {
     this.load.image('ground', './assets/ground.png');
     this.load.image('runner', './assets/player.png');
-    this.load.image('jumpObj', './assets/obstacle1.png')
+    this.load.image('jumpObs', './assets/obstacle1.png')
+    this.load.image('slideObs', './assets/obstacle2.png')
   }
 
   create() {
     // Define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     let tempConfig = {
       fontFamily: 'Courier',
       fontSize: '28px',
@@ -40,39 +42,20 @@ class Play extends Phaser.Scene {
     this.activeObstacleGroup = this.physics.add.group({
       immovable: true,
       allowGravity: false,
-      removeCallback: function(obstacle) {
-        // Once removed, put the obstacle into the (inactive) obstaclePool
-        obstacle.scene.obstaclePool.add(obstacle);
-      }
-    });
-    /*
-      * Obstacle Group: obstaclePool
-      * Inactive obstacles ready to be adedd into the scene
-      */
-    this.obstaclePool = this.physics.add.group({
-      immovable: true,
-      allowGravity: false,
-      removeCallback: function(obstacle) {
-        // Once removed, put the obstacle into the ActiveObstacleGroup
-        obstacle.scene.activeObstacleGroup.add(obstacle);
-      }
     });
     // Add collisions for obstacles and ground
     this.physics.add.collider(this.activeObstacleGroup, this.groundGroup);
-    this.physics.add.collider(this.obstaclePool, this.groundGroup);
     // Add collisions for obstalces and player
     this.physics.add.overlap(this.runner, this.activeObstacleGroup, this.handleCollision, null, this);
     // Create first obstacle
     this.addObstacle(1, game.config.width);
-    // Time since last obstacle, for "random" spawns
-    this.timeSinceLastObstacle = 0
     // Incrementing numbers for obstacle spawns
     this.speedMod = 1;
     // Game Over state
     this.gameOver = false;
     // Scaling speed timer
     this.speedScaling = this.time.addEvent({ delay: game.settings.obstacleScaleTime, callback: () => {
-      this.speedMod += game.settings.obstacleSpeedScale
+      this.speedMod += game.settings.obstacleSpeedScale;
     }, callbackScope: null, loop: !this.gameOver});
   }
 
@@ -80,6 +63,7 @@ class Play extends Phaser.Scene {
     //console.log(this.activeObstacleGroup.getLength() + ", " + this.obstaclePool.getLength())
     //if(this.obstaclePool.getLength() && !this.gameOver) this.addObstacle(1, game.config.width);
     //console.log(time + ", Delta:" + delta);
+    console.log(this.runner.isSliding);
     if(!this.gameOver) {
       this.runner.update();
       if(this.activeObstacleGroup.getLength() == 0){
@@ -87,6 +71,10 @@ class Play extends Phaser.Scene {
       }
       this.cleanOffscreen()
     }
+
+    this.activeObstacleGroup.getChildren().forEach(obstacle => {
+      obstacle.setVelocityX(game.settings.obstacleBaseSpeed*-1 * this.speedMod)
+    });
   }
 
   // Notes to anyone attempting to program addObstacle:
@@ -97,29 +85,25 @@ class Play extends Phaser.Scene {
   */
   addObstacle(speedMod, posX, placeholder = true) {
     let obstacle;
-    if(this.obstaclePool.getLength()) { // True if not empty
-      let obsNum = Phaser.Math.Between(0, this.obstaclePool.getLength() - 1)
-      obstacle = this.obstaclePool.getChildren()[obsNum];
-      this.obstaclePool.remove(obstacle);
-      obstacle.x = posX;
-      obstacle.active = true;
-      obstacle.visible = true;
-      obstacle.setVelocityX(game.settings.obstacleBaseSpeed*-1 * speedMod)
-      
+    if(Phaser.Math.Between(0,1)) {
+      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'slideObs').setOrigin(0.5); // NOTE: 100 is placeholder value
+      obstacle.canSlide = true;
     } else {
-      
-      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'jumpObj').setOrigin(0.5); // NOTE: 100 is placeholder value
-      obstacle.setVelocityX(game.settings.obstacleBaseSpeed*-1 * speedMod);
-      console.log(obstacle.body.velocity);
-      console.log(this.activeObstacleGroup.getLength());
+      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'jumpObs').setOrigin(0.5); // NOTE: 100 is placeholder value
+      obstacle.canSlide = false;
     }
+    // console.log(obstacle.body.velocity);
+    // console.log(this.activeObstacleGroup.getLength());
   }
   
   handleCollision(runner, obstacle){
-    this.gameOver = true;
-    this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
-    this.activeObstacleGroup.killAndHide(obstacle);
-    this.activeObstacleGroup.remove(obstacle);
+    console.log(obstacle.canSlide)
+    if( (!runner.isSliding && obstacle.canSlide) || !obstacle.canSlide){
+      this.gameOver = true;
+      this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
+      this.activeObstacleGroup.killAndHide(obstacle);
+      this.activeObstacleGroup.remove(obstacle);
+    }
   }
 
   cleanOffscreen() {
