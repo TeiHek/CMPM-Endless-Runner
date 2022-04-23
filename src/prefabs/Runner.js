@@ -36,7 +36,9 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             this.play('run');
             this.isSliding = false;
         }
-        if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) this.pushBack(1);
+        // Debug button
+        // if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) this.pushBack(1);
+        
         // Stops acceleration when max velocity is reached
         if (this.body.velocity.x > game.settings.playerMaxVelocity && this.x < game.settings.playerMaxPosition) {
             this.setVelocityX(game.settings.playerMaxVelocity);
