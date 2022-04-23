@@ -26,8 +26,9 @@ class Menu extends Phaser.Scene {
             jumpForce: 800,
             playerStartPosition: 200,
             obstacleBaseSpeed: 400,
-            obstacleSpeedScale: 0.1,
-            obstacleScaleTime: 3000,
+            obstacleSpeedScale: 0.2,
+            obstacleScaleMax: 2,
+            obstacleScaleTime: 5000,
         }
     }
 

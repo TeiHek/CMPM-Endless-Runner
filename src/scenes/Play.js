@@ -56,7 +56,10 @@ class Play extends Phaser.Scene {
     this.gameOver = false;
     // Scaling speed timer
     this.speedScaling = this.time.addEvent({ delay: game.settings.obstacleScaleTime, callback: () => {
-      this.speedMod += game.settings.obstacleSpeedScale;
+      if(this.speedMod <= game.settings.obstacleScaleMax) {
+        this.speedMod += game.settings.obstacleSpeedScale;
+      }
+      console.log('Speed: ' + this.speedMod)
     }, callbackScope: null, loop: !this.gameOver});
   }
 
