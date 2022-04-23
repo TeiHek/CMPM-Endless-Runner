@@ -25,10 +25,15 @@ class Menu extends Phaser.Scene {
         game.settings = {
             jumpForce: 800,
             playerStartPosition: 200,
+            playerAcceleration: 5,
+            playerMaxVelocity: 10,
+            playerMaxPosition: game.config.width * 7/8,
+            playerBasePush: 100,
             obstacleBaseSpeed: 400,
             obstacleSpeedScale: 0.2,
-            obstacleScaleMax: 2,
+            obstacleMaxScale: 3,
             obstacleScaleTime: 5000,
+            obstacleMinSpawnTime: 1000
         }
     }
 

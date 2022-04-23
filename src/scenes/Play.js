@@ -15,6 +15,7 @@ class Play extends Phaser.Scene {
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     let tempConfig = {
       fontFamily: 'Courier',
       fontSize: '28px',
@@ -50,17 +51,18 @@ class Play extends Phaser.Scene {
     this.physics.add.overlap(this.runner, this.activeObstacleGroup, this.handleCollision, null, this);
     // Create first obstacle
     this.addObstacle(1, game.config.width);
+    this.timeSinceLastObstacle = 0;
     // Incrementing numbers for obstacle spawns
     this.speedMod = 1;
     // Game Over state
     this.gameOver = false;
     // Scaling speed timer
     this.speedScaling = this.time.addEvent({ delay: game.settings.obstacleScaleTime, callback: () => {
-      if(this.speedMod <= game.settings.obstacleScaleMax) {
+      if(this.speedMod <= game.settings.obstacleMaxScale) {
         this.speedMod += game.settings.obstacleSpeedScale;
       }
       console.log('Speed: ' + this.speedMod)
-    }, callbackScope: null, loop: !this.gameOver});
+    }, callbackScope: null, loop: true});
   }
 
   update(time, delta) {
@@ -70,13 +72,23 @@ class Play extends Phaser.Scene {
     //console.log(this.runner.isSliding);
     // Scene Swapping on game over
     if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) this.scene.start('menuScene');
-
+    
     if(!this.gameOver) {
       this.runner.update();
-      if(this.activeObstacleGroup.getLength() == 0){
+      this.timeSinceLastObstacle += delta;
+
+      if(this.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime){
         this.addObstacle(this.speedMod, game.config.width);
+        this.timeSinceLastObstacle = 0;
       }
+      // Clean offscreen obstacles
       this.cleanOffscreen()
+
+      // Check if player is offscreen
+      if(this.runner.x < 0) {
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
+        this.gameOver = true;
+      }
     }
 
     this.activeObstacleGroup.getChildren().forEach(obstacle => {
@@ -106,8 +118,7 @@ class Play extends Phaser.Scene {
   handleCollision(runner, obstacle){
     console.log(obstacle.canSlide)
     if( (!runner.isSliding && obstacle.canSlide) || !obstacle.canSlide){
-      this.gameOver = true;
-      this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
+      runner.pushBack(this.speedMod)
       this.activeObstacleGroup.killAndHide(obstacle);
       this.activeObstacleGroup.remove(obstacle);
     }
