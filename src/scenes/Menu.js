@@ -5,7 +5,7 @@ class Menu extends Phaser.Scene {
 
     create() {
         // Define keys
-        KeyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         // menu text configuration
         let menuConfig = {
             fontFamily: 'Courier',

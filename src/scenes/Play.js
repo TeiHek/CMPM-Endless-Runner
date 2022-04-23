@@ -5,7 +5,7 @@ class Play extends Phaser.Scene {
   
   preload() {
     this.load.image('ground', './assets/ground.png');
-    this.load.image('runner', './assets/player.png');
+    this.load.spritesheet('runner', './assets/player.png', {frameWidth: 40, frameHeight: 80, startFrame: 0, endFrame: 1});
     this.load.image('jumpObs', './assets/obstacle1.png')
     this.load.image('slideObs', './assets/obstacle2.png')
   }
@@ -28,7 +28,7 @@ class Play extends Phaser.Scene {
       fixedWidth: 0
     }
     this.add.text( 20,20, 'Play', tempConfig);
-    this.runner = new Runner(this, 150, 90, 'runner').setOrigin(0.5);
+    this.runner = new Runner(this, 150, 90, 'runner',).setOrigin(0.5);
     // Create ground
     this.groundGroup = this.physics.add.staticGroup();
     this.ground = this.groundGroup.create(game.config.width/2, game.config.height - 16, 'ground').setOrigin(0.5);

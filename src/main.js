@@ -18,7 +18,7 @@ let config = {
 
 let game = new Phaser.Game(config);
 // Reserve key names
-let keySPACE, keyUP, keyDOWN, keyLEFT, KeyRIGHT;
+let keySPACE, keyUP, keyDOWN, keyLEFT, keyRIGHT;
 
 // Priority list, temporary
 // 1 (high): Jumping, Obstacles to jump over, simple obstacle collision handling
