@@ -6,8 +6,10 @@ class Play extends Phaser.Scene {
   preload() {
     this.load.spritesheet('ground', './assets/ground-sheet.png', {frameWidth: 50, frameHeight: 50, startFrame: 0, endFrame: 8});
     this.load.spritesheet('runner', './assets/player.png', {frameWidth: 40, frameHeight: 80, startFrame: 0, endFrame: 1});
-    this.load.image('jumpObs', './assets/obstacle1.png')
-    this.load.image('slideObs', './assets/obstacle2.png')
+    this.load.image('jumpObs', './assets/obstacle1.png');
+    this.load.image('slideObs', './assets/obstacle2.png');
+    this.load.audio('jump', './assets/jump.wav');
+    this.load.audio('hurt', './assets/hurt.wav');
   }
 
   create() {

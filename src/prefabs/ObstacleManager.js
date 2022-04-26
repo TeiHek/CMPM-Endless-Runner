@@ -10,6 +10,7 @@
         });
         // Add collisions for obstalces and player
         scene.physics.add.overlap(scene.runner, this.activeObstacleGroup, this.handleCollision, null, this);
+        this.hurtSfx = scene.sound.add('hurt');
         
         this.scene = scene;
         this.textures = textures;
@@ -43,9 +44,10 @@
     handleCollision(runner, obstacle){
         console.log(obstacle.canSlide)
         if( (!runner.isSliding && obstacle.canSlide) || !obstacle.canSlide){
-          runner.pushBack(this.scene.speedMod)
-          this.activeObstacleGroup.killAndHide(obstacle);
-          this.activeObstacleGroup.remove(obstacle);
+            this.hurtSfx.play();
+            runner.pushBack(this.scene.speedMod)
+            this.activeObstacleGroup.killAndHide(obstacle);
+            this.activeObstacleGroup.remove(obstacle);
         }
     }
 

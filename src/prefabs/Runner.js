@@ -20,12 +20,16 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             repeat: -1
         });
 
+        this.jumpSfx = scene.sound.add('jump');
     }
 
     update(time, delta) {
         // console.log(this.y);
         // Jumping
-        if(Phaser.Input.Keyboard.JustDown(keyUP) && this.body.touching.down && this.jumpCooldown <= 0) this.setVelocityY(game.settings.jumpForce * -1)
+        if(Phaser.Input.Keyboard.JustDown(keyUP) && this.body.touching.down && this.jumpCooldown <= 0) {
+            this.jumpSfx.play()
+            this.setVelocityY(game.settings.jumpForce * -1)
+        }
         if(keyDOWN.isDown && this.body.touching.down) {
             this.jumpCooldown = game.settings.playerJumpCooldown;
             this.play('slide');
