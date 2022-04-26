@@ -4,7 +4,7 @@ class Play extends Phaser.Scene {
   }
   
   preload() {
-    this.load.image('ground', './assets/ground.png');
+    this.load.spritesheet('ground', './assets/ground-sheet.png', {frameWidth: 50, frameHeight: 50, startFrame: 0, endFrame: 8});
     this.load.spritesheet('runner', './assets/player.png', {frameWidth: 40, frameHeight: 80, startFrame: 0, endFrame: 1});
     this.load.image('jumpObs', './assets/obstacle1.png')
     this.load.image('slideObs', './assets/obstacle2.png')
@@ -29,11 +29,39 @@ class Play extends Phaser.Scene {
       fixedWidth: 0
     }
     this.add.text( 20,20, 'Play', tempConfig);
-    this.runner = new Runner(this, 150, 90, 'runner',).setOrigin(0.5);
+
+    // Score
+    this.playerScore = 0
+    let tempScoreConfig = {
+      fontFamily: 'Courier',
+      fontSize: '28px',
+      backgroundColor: '#F3B141',
+      color: '#843605',
+      align: 'right',
+      padding: {
+          top: 5,
+          bottom: 5,
+      },
+      fixedWidth: 100
+    }
+    this.score = this.add.text( game.config.width - 150,20, this.score, tempScoreConfig);
+    this.runner = new Runner(this, 150, 90, 'runner').setOrigin(0);
     // Create ground
-    this.groundGroup = this.physics.add.staticGroup();
-    this.ground = this.groundGroup.create(game.config.width/2, game.config.height - 16, 'ground').setOrigin(0.5);
-    this.ground.setImmovable(true);
+    this.anims.create({
+      key: 'groundAnim',
+      frames: this.anims.generateFrameNumbers('ground', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ] }),
+      frameRate: 60,
+      repeat: -1
+    });
+
+    this.groundGroup = this.physics.add.group();
+    for(let i = 0; i < game.config.width; i += groundSize) {
+      let groundTile = this.groundGroup.create(i, game.config.height - groundSize, 'ground').setOrigin(0);
+      groundTile.body.immovable = true;
+      groundTile.body.allowGravity = false;
+      groundTile.play('groundAnim')
+    }
+    
     // Collision between runner and ground
     this.physics.add.collider(this.runner, this.groundGroup);
     // Create Obstacles
@@ -71,11 +99,16 @@ class Play extends Phaser.Scene {
     //console.log(time + ", Delta:" + delta);
     //console.log(this.runner.isSliding);
     // Scene Swapping on game over
-    if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) this.scene.start('menuScene');
+    if(this.gameOver) {
+      if (Phaser.Input.Keyboard.JustDown(keyLEFT)) this.scene.start('menuScene');
+      if (this.playerScore > highScore) highScore = this.playerScore;
+    }
     
     if(!this.gameOver) {
-      this.runner.update();
+      this.runner.update(time, delta);
       this.timeSinceLastObstacle += delta;
+      this.playerScore++;
+      this.score.text = this.playerScore
 
       if(this.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime){
         this.addObstacle(this.speedMod, game.config.width);
@@ -106,10 +139,10 @@ class Play extends Phaser.Scene {
   addObstacle(speedMod, posX, placeholder = true) {
     let obstacle;
     if(Phaser.Math.Between(0,1)) {
-      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*4.5, 'slideObs').setOrigin(0.5); // NOTE: Y param is placeholder value
+      obstacle = this.activeObstacleGroup.create(posX, game.config.height - groundSize*4.5, 'slideObs').setOrigin(0); // NOTE: Y param is placeholder value
       obstacle.canSlide = true;
     } else {
-      obstacle = this.activeObstacleGroup.create(posX, game.config.height - this.ground.height*2, 'jumpObs').setOrigin(0.5); // NOTE: Y param is placeholder value
+      obstacle = this.activeObstacleGroup.create(posX, game.config.height - groundSize*2, 'jumpObs').setOrigin(0); // NOTE: Y param is placeholder value
       obstacle.canSlide = false;
     }
     // console.log(obstacle.body.velocity);

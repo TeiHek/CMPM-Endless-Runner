@@ -22,18 +22,20 @@ class Menu extends Phaser.Scene {
         // show menu text
         this.add.text(20, 20, 'Menu', menuConfig);
         this.add.text(20, 80, 'Press Right to go to Play scene', menuConfig);
+        this.add.text(20, 140, 'High score: ' + highScore, menuConfig)
         game.settings = {
             jumpForce: 800,
             playerStartPosition: 200,
             playerAcceleration: 5,
             playerMaxVelocity: 10,
-            playerMaxPosition: game.config.width * 7/8,
-            playerBasePush: 100,
-            obstacleBaseSpeed: 400,
+            playerMaxPosition: game.config.width * 2/3,
+            playerBasePush: 200,
+            playerJumpCooldown: 250,
+            obstacleBaseSpeed: 600,
             obstacleSpeedScale: 0.2,
             obstacleMaxScale: 3,
             obstacleScaleTime: 5000,
-            obstacleMinSpawnTime: 1000
+            obstacleMinSpawnTime: 500
         }
     }
 

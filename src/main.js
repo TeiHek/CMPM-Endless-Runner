@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.CANVAS,
-    width: 640,
-    height: 480,
+    width: 1280,
+    height: 768,
     scene: [ Menu, Play ],
     fps: {
         target: 60,
@@ -19,6 +19,8 @@ let config = {
 let game = new Phaser.Game(config);
 // Reserve key names
 let keySPACE, keyUP, keyDOWN, keyLEFT, keyRIGHT;
+let groundSize = 50;
+let highScore = 0;
 
 // Priority list, temporary
 // 1 (high): Jumping, Obstacles to jump over, simple obstacle collision handling

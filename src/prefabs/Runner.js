@@ -5,6 +5,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
         this.setAccelerationX(game.settings.playerAcceleration);
         this.isSliding = false;
+        this.jumpCooldown = 0;
         scene.anims.create({
             key: 'run',
             frames: this.anims.generateFrameNumbers(texture, { frames: [ 0 ] }),
@@ -18,23 +19,21 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             frameRate: 1,
             repeat: -1
         });
-        
+
     }
 
-    create() {
-       
-    }
-
-    update() {
+    update(time, delta) {
         // console.log(this.y);
         // Jumping
-        if(Phaser.Input.Keyboard.JustDown(keyUP) && this.body.touching.down) this.setVelocityY(game.settings.jumpForce * -1)
+        if(Phaser.Input.Keyboard.JustDown(keyUP) && this.body.touching.down && this.jumpCooldown <= 0) this.setVelocityY(game.settings.jumpForce * -1)
         if(keyDOWN.isDown && this.body.touching.down) {
+            this.jumpCooldown = game.settings.playerJumpCooldown;
             this.play('slide');
             this.isSliding = true;
         } else {
             this.play('run');
             this.isSliding = false;
+            this.jumpCooldown -= delta;
         }
         // Debug button
         // if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) this.pushBack(1);
@@ -64,7 +63,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
     pushBack(speedMod) {
         this.setAccelerationX(0);
         this.setVelocityX(game.settings.playerBasePush * -1 * speedMod);
-        this.setDragX(100 * speedMod);
+        this.setDragX(200 * speedMod);
         console.log('Boop!');
     }
 }
