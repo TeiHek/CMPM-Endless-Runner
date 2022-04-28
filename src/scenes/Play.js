@@ -5,9 +5,13 @@ class Play extends Phaser.Scene {
   
   preload() {
     this.load.spritesheet('ground', './assets/ground-sheet.png', {frameWidth: 50, frameHeight: 50, startFrame: 0, endFrame: 8});
-    this.load.spritesheet('runner', './assets/player.png', {frameWidth: 40, frameHeight: 80, startFrame: 0, endFrame: 1});
+    //this.load.spritesheet('runner', './assets/player.png', {frameWidth: 40, frameHeight: 80, startFrame: 0, endFrame: 1});
+    this.load.atlas('runner_atlas', './assets/playersheet.png', './assets/playersheet.json');
     this.load.image('jumpObs', './assets/obstacle1.png');
     this.load.image('slideObs', './assets/obstacle2.png');
+    // this.load.image('turkey', './assets/turkey.png');
+    // this.load.image('fireball', './assets/fireball.png');
+    this.load.atlas('turkey_atlas', './assets/turkey_sheet.png', './assets/turkey_sheet.json')
     this.load.audio('jump', './assets/jump.wav');
     this.load.audio('hurt', './assets/hurt.wav');
   }
@@ -47,7 +51,9 @@ class Play extends Phaser.Scene {
       fixedWidth: 100
     }
     this.score = this.add.text( game.config.width - 150,20, this.score, tempScoreConfig);
-    this.runner = new Runner(this, 150, 90, 'runner').setOrigin(0);
+    // Create player and turkey
+    this.runner = new Runner(this, 150, game.config.height/2, 'runner_atlas').setOrigin(0.5, 1);
+    this.turkey = new Turkey(this, game.settings.turkeyPosition, game.config.height/2, 'turkey_atlas').setOrigin(0);
     // Create ground
     this.anims.create({
       key: 'groundAnim',
@@ -66,6 +72,15 @@ class Play extends Phaser.Scene {
     
     // Collision between runner and ground
     this.physics.add.collider(this.runner, this.groundGroup);
+
+    // Collision between turkey and ground
+    this.physics.add.collider(this.turkey, this.groundGroup);
+
+    // Collision between runner and turkey
+    this.playerHit = false;
+    this.physics.add.collider(this.runner, this.turkey, () => {
+      this.playerHit = true;
+    });
     // Create Obstacles
     this.obstacles = new ObstacleManager(this, ['jumpObs', 'slideObs']);
     
@@ -83,6 +98,10 @@ class Play extends Phaser.Scene {
       }
       console.log('Speed: ' + this.speedMod)
     }, callbackScope: null, loop: true});
+
+    // Timer to swap between turkey and obstacles
+    this.turkeyActive = false;
+    this.swapTimer = this.time.delayedCall(game.settings.swapTime, this.resetSwap, null, this);
   }
 
   update(time, delta) {
@@ -92,25 +111,45 @@ class Play extends Phaser.Scene {
       if (this.playerScore > highScore) highScore = this.playerScore;
     }
     
+    this.turkey.play('turkeyRun', true)
     if(!this.gameOver) {
-      this.runner.update(time, delta);
+      if(!this.playerHit) this.runner.update(time, delta);
       this.timeSinceLastObstacle += delta;
       this.playerScore++;
       this.score.text = this.playerScore
       
       // Spawning and updating obstacles
-      if(this.obstacles.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime){
+      if(this.turkeyActive && this.obstacles.activeObstacleGroup.getLength() == 0) {
+        this.turkey.update(time, delta);
+      } else if(this.obstacles.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime){
         this.obstacles.addObstacle();
         this.timeSinceLastObstacle = 0;
       }
       this.obstacles.update(this.speedMod);
+      this.turkey.checkOffscreen();
 
       // Check if player is offscreen
-      if(this.runner.x < 0) {
+      if(this.runner.x < 0 || this.runner.x > game.config.width) {
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT to restart').setOrigin(0.5);
         this.gameOver = true;
       }
+
+      // Player touches turkey but turkey is not active
+      if(!this.turkeyActive && this.playerHit) {
+        this.turkey.rush();
+        this.turkeyActive = true;
+      }
     }
   }
+
+  resetSwap() {
+    console.log('swapped!');
+    this.turkeyActive = !this.turkeyActive;
+    let newTimer = Phaser.Math.Between(game.settings.minSwapTime, game.settings.maxSwapTime);
+    console.log(newTimer);
+    this.swapTimer = this.time.delayedCall(newTimer, this.resetSwap, null, this);;
+    console.log(this.swapTimer);
+  }
+
 }

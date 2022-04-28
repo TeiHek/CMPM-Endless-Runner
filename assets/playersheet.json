@@ -1,0 +1,54 @@
+{
+    "frames": {
+        "run": {
+            "frame": {
+                "x": 1,
+                "y": 1,
+                "w": 38,
+                "h": 79
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 79
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 79
+            }
+        },
+        "slide": {
+            "frame": {
+                "x": 41,
+                "y": 41,
+                "w": 38,
+                "h": 39
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 39
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 39
+            }
+        }
+    },
+    "meta": {
+        "app": "https://www.leshylabs.com/apps/sstool/",
+        "version": "Leshy SpriteSheet Tool v0.8.4",
+        "image": "playersheet.png",
+        "size": {
+            "w": 80,
+            "h": 80
+        },
+        "scale": 1
+    }
+}

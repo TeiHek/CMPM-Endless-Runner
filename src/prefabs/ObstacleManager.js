@@ -22,12 +22,7 @@
         });
         this.cleanOffscreen()        
     }
-    // Notes to anyone attempting to program addObstacle:
-    /*
-    var value = Phaser.Math.Between(min, max); to pick a number
-    group.getChildren()[value]; to get item in group
-    to get max number, use this.group.getLength() - 1; max is inclusive.
-    */
+
     addObstacle() {
         let obstacle;
         if(Phaser.Math.Between(0,1)) {

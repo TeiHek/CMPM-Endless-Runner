@@ -6,16 +6,23 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         this.setAccelerationX(game.settings.playerAcceleration);
         this.isSliding = false;
         this.jumpCooldown = 0;
+        console.log(this.body)
         scene.anims.create({
             key: 'run',
-            frames: this.anims.generateFrameNumbers(texture, { frames: [ 0 ] }),
+            defaultTextureKey: texture,
+            frames: [
+                { frame: 'run'}
+            ],
             frameRate: 1,
             repeat: -1
         });
 
         scene.anims.create({
             key: 'slide',
-            frames: this.anims.generateFrameNumbers(texture, { frames: [ 1 ] }),
+            defaultTextureKey: texture,
+            frames: [
+                { frame: 'slide'}
+            ],
             frameRate: 1,
             repeat: -1
         });
@@ -34,10 +41,12 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             this.jumpCooldown = game.settings.playerJumpCooldown;
             this.play('slide');
             this.isSliding = true;
+            this.body.setSize();
         } else {
             this.play('run');
             this.isSliding = false;
             this.jumpCooldown -= delta;
+            this.body.setSize();
         }
         // Debug button
         // if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) this.pushBack(1);
