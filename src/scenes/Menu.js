@@ -24,8 +24,8 @@ class Menu extends Phaser.Scene {
         this.add.text(20, 80, 'Press Right to go to Play scene', menuConfig);
         this.add.text(20, 140, 'High score: ' + highScore, menuConfig)
         game.settings = {
-            jumpForce: 800,
-            playerStartPosition: 200,
+            jumpForce: 1250,
+            playerStartPosition: 400,
             playerAcceleration: 5,
             playerMaxVelocity: 10,
             playerMaxPosition: game.config.width * 2/3,

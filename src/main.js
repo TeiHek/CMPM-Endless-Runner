@@ -1,7 +1,8 @@
 let config = {
     type: Phaser.CANVAS,
-    width: 1280,
+    width: 1366,
     height: 768,
+    //autoCenter: true,
     scene: [ Menu, Play ],
     fps: {
         target: 60,
@@ -10,8 +11,8 @@ let config = {
     physics: {
         default: "arcade",
         arcade: {
-            gravity: { y: 2000 },
-            debug: false
+            gravity: { y: 2500 },
+            debug: true
         }
     }
 }

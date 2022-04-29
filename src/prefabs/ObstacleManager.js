@@ -37,7 +37,7 @@
     }
 
     handleCollision(runner, obstacle){
-        console.log(obstacle.canSlide)
+        //console.log(obstacle.canSlide)
         if( (!runner.isSliding && obstacle.canSlide) || !obstacle.canSlide){
             this.hurtSfx.play();
             runner.pushBack(this.scene.speedMod)

@@ -52,8 +52,8 @@ class Play extends Phaser.Scene {
     }
     this.score = this.add.text( game.config.width - 150,20, this.score, tempScoreConfig);
     // Create player and turkey
-    this.runner = new Runner(this, 150, game.config.height/2, 'runner_atlas').setOrigin(0.5, 1);
-    this.turkey = new Turkey(this, game.settings.turkeyPosition, game.config.height/2, 'turkey_atlas').setOrigin(0);
+    this.runner = new Runner(this, game.settings.playerStartPosition, game.config.height/2, 'runner_atlas').setOrigin(0.5, 1);
+    this.turkey = new Turkey(this, game.settings.turkeyPosition, game.config.height/2, 'turkey_atlas').setOrigin(0.5, 1);
     // Create ground
     this.anims.create({
       key: 'groundAnim',
@@ -96,7 +96,7 @@ class Play extends Phaser.Scene {
       if(this.speedMod <= game.settings.obstacleMaxScale) {
         this.speedMod += game.settings.obstacleSpeedScale;
       }
-      console.log('Speed: ' + this.speedMod)
+      //console.log('Speed: ' + this.speedMod)
     }, callbackScope: null, loop: true});
 
     // Timer to swap between turkey and obstacles
@@ -111,7 +111,10 @@ class Play extends Phaser.Scene {
       if (this.playerScore > highScore) highScore = this.playerScore;
     }
     
-    this.turkey.play('turkeyRun', true)
+    // Turkey anims, since turkey.update is not always called
+    if(this.turkey.body.touching.down && !this.turkey.isFlying) {
+      this.turkey.play('turkeyRun', true);
+    }
     if(!this.gameOver) {
       if(!this.playerHit) this.runner.update(time, delta);
       this.timeSinceLastObstacle += delta;
@@ -147,9 +150,9 @@ class Play extends Phaser.Scene {
     console.log('swapped!');
     this.turkeyActive = !this.turkeyActive;
     let newTimer = Phaser.Math.Between(game.settings.minSwapTime, game.settings.maxSwapTime);
-    console.log(newTimer);
+    //console.log(newTimer);
     this.swapTimer = this.time.delayedCall(newTimer, this.resetSwap, null, this);;
-    console.log(this.swapTimer);
+    //console.log(this.swapTimer);
   }
 
 }
