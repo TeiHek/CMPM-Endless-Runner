@@ -12,7 +12,7 @@ let config = {
         default: "arcade",
         arcade: {
             gravity: { y: 2500 },
-            debug: true
+            debug: false
         }
     }
 }
@@ -20,7 +20,7 @@ let config = {
 let game = new Phaser.Game(config);
 // Reserve key names
 let keySPACE, keyUP, keyDOWN, keyLEFT, keyRIGHT;
-let groundSize = 50;
+let groundSize = 99;
 let highScore = 0;
 
 // Priority list, temporary
