@@ -115,13 +115,17 @@ class Play extends Phaser.Scene {
     if(this.turkey.body.touching.down && !this.turkey.isFlying) {
       this.turkey.play('turkeyRun', true);
     }
+
+    // Main block while gameplay is active
     if(!this.gameOver) {
       if(!this.playerHit) this.runner.update(time, delta);
       this.timeSinceLastObstacle += delta;
+
+      // Handle Score
       this.playerScore++;
       this.score.text = this.playerScore
       
-      // Spawning and updating obstacles
+      // Spawning and updating obstacles or turkey attacks, whichever is active
       if(this.turkeyActive && this.obstacles.activeObstacleGroup.getLength() == 0) {
         this.turkey.update(time, delta);
       } else if(this.obstacles.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime){

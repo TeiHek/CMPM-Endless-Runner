@@ -4,6 +4,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setMaxVelocity(1200, 10000)
+        // Create Turkey Animations
         scene.anims.create({
             key: 'turkeyRun',
             frames: this.anims.generateFrameNames(texture, {
@@ -37,7 +38,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
             frameRate: 30,
             repeat: -1
         });
-
+        // Variables for Turkey
         this.rushCooldown = 0;
         this.isFlying = false;
         this.body.setSize(this.width * 1/2, this.height, true);
@@ -66,12 +67,12 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    // Charge
     rush() {
-        // Play animation
-        // When animation is done:
         this.setAccelerationX(800);
     }
 
+    // Fly (originally meant for fireball)
     shoot() {
         this.setAccelerationY(-2400);
         let target = new Phaser.Math.Vector2(this.x, this.y - 100);
@@ -79,6 +80,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
         this.setAccelerationX(800);
     }
 
+    // Reset turkey to original position after going offscreen
     checkOffscreen() {
         if(this.x + this.width > game.config.width * 1.2)
         {
