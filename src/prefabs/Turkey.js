@@ -8,7 +8,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
         scene.anims.create({
             key: 'turkeyRun',
             frames: this.anims.generateFrameNames(texture, {
-                prefix: 'turkey_sheet ',
+                prefix: 'turkey_sheetOutline ',
                 start: 0,
                 end: 11,
                 suffix: '.ase',
@@ -19,7 +19,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
         scene.anims.create({
             key: 'turkeyFlyStart',
             frames: this.anims.generateFrameNames(texture, {
-                prefix: 'turkey_sheet ',
+                prefix: 'turkey_sheetOutline ',
                 start: 12,
                 end: 20,
                 suffix: '.ase',
@@ -30,7 +30,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
         scene.anims.create({
             key: 'turkeyFly',
             frames: this.anims.generateFrameNames(texture, {
-                prefix: 'turkey_sheet ',
+                prefix: 'turkey_sheetOutline ',
                 start: 21,
                 end: 24,
                 suffix: '.ase',

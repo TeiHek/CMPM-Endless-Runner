@@ -39,7 +39,7 @@ class Menu extends Phaser.Scene {
             swapTime: 8000,
             minSwapTime: 3000,
             maxSwapTime: 16000,
-            turkeyPosition: 10,
+            turkeyPosition: 100,
             turkeyRushCooldown: 500
         }
     }

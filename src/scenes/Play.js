@@ -4,13 +4,16 @@ class Play extends Phaser.Scene {
   }
   
   preload() {
-    this.load.spritesheet('ground', './assets/ground-sheet.png', {frameWidth: 50, frameHeight: 50, startFrame: 0, endFrame: 8});
-    //this.load.spritesheet('runner', './assets/player.png', {frameWidth: 40, frameHeight: 80, startFrame: 0, endFrame: 1});
+    this.load.spritesheet('ground', './assets/ground_tile2.png', {frameWidth: 99, frameHeight: 99, startFrame: 0, endFrame: 10});
     this.load.atlas('runner_atlas', './assets/playersheet.png', './assets/playersheet.json');
     this.load.image('jumpObs', './assets/obstacle1.png');
     this.load.image('slideObs', './assets/obstacle2.png');
-    // this.load.image('turkey', './assets/turkey.png');
-    // this.load.image('fireball', './assets/fireball.png');
+    this.load.image('skyBG', './assets/sky_layer.png');
+    this.load.image('treeFront', './assets/wip.png');
+    this.load.image('treeLeaf', './assets/wip2.png');
+    this.load.image('treeBG0', './assets/trees_layer_0.png');
+    this.load.image('treeBG1', './assets/trees_layer_1.png');
+    this.load.image('treeBG2', './assets/trees_layer_2.png');
     this.load.atlas('turkey_atlas', './assets/turkey_sheet.png', './assets/turkey_sheet.json')
     this.load.audio('jump', './assets/jump.wav');
     this.load.audio('hurt', './assets/hurt.wav');
@@ -36,6 +39,16 @@ class Play extends Phaser.Scene {
     }
     this.add.text( 20,20, 'Play', tempConfig);
 
+    // Background creation
+    this.sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'skyBG').setOrigin(0, 0);
+    this.treeL2 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeBG2').setOrigin(0, 0);
+    this.treeL1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeBG1').setOrigin(0, 0);
+    this.treeL0 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeBG0').setOrigin(0, 0);
+    this.treeFront = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeFront').setOrigin(0, 0);
+    this.treeLeaf = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeLeaf').setOrigin(0, 0);
+    this.treeFront.setDepth(2)
+    this.treeLeaf.setDepth(2)
+
     // Score
     this.playerScore = 0
     let tempScoreConfig = {
@@ -57,7 +70,7 @@ class Play extends Phaser.Scene {
     // Create ground
     this.anims.create({
       key: 'groundAnim',
-      frames: this.anims.generateFrameNumbers('ground', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ] }),
+      frames: this.anims.generateFrameNumbers('ground', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] }),
       frameRate: 60,
       repeat: -1
     });
@@ -84,8 +97,6 @@ class Play extends Phaser.Scene {
     // Create Obstacles
     this.obstacles = new ObstacleManager(this, ['jumpObs', 'slideObs']);
     
-    // Create first obstacle
-    this.obstacles.addObstacle();
     this.timeSinceLastObstacle = 0;
     // Incrementing numbers for obstacle spawns
     this.speedMod = 1;
@@ -116,6 +127,14 @@ class Play extends Phaser.Scene {
       this.turkey.play('turkeyRun', true);
     }
 
+    // Scroll BG
+    this.sky.tilePositionX += 3;
+    this.treeFront.tilePositionX += 7;
+    this.treeLeaf.tilePositionX += 7;
+    this.treeL0.tilePositionX += 5;
+    this.treeL1.tilePositionX += 3;
+    this.treeL2.tilePositionX += 1;
+
     // Main block while gameplay is active
     if(!this.gameOver) {
       if(!this.playerHit) this.runner.update(time, delta);
@@ -128,7 +147,7 @@ class Play extends Phaser.Scene {
       // Spawning and updating obstacles or turkey attacks, whichever is active
       if(this.turkeyActive && this.obstacles.activeObstacleGroup.getLength() == 0) {
         this.turkey.update(time, delta);
-      } else if(this.obstacles.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime){
+      } else if(this.obstacles.activeObstacleGroup.getLength() == 0 && this.timeSinceLastObstacle > game.settings.obstacleMinSpawnTime) {
         this.obstacles.addObstacle();
         this.timeSinceLastObstacle = 0;
       }

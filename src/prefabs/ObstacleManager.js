@@ -26,10 +26,10 @@
     addObstacle() {
         let obstacle;
         if(Phaser.Math.Between(0,1)) {
-            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize*4.5, this.textures[1]).setOrigin(0); // NOTE: Y param is placeholder value
+            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize*5.25, this.textures[1]).setOrigin(1); // NOTE: Y param is placeholder value
             obstacle.canSlide = true;
         } else {
-            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize*2, this.textures[0]).setOrigin(0); // NOTE: Y param is placeholder value
+            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize, this.textures[0]).setOrigin(1); // NOTE: Y param is placeholder value
             obstacle.canSlide = false;
         }
         // console.log(obstacle.body.velocity);
