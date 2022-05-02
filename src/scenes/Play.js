@@ -21,13 +21,18 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+    //Music
+    this.bgMusic = this.sound.add('music');
+    this.bgMusic.loop = true;
+    this.bgMusic.play();
+
     // Define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     let tempConfig = {
-      fontFamily: 'Courier',
+      fontFamily: 'FreePixel',
       fontSize: '28px',
       backgroundColor: '#F3B141',
       color: '#843605',
@@ -77,10 +82,12 @@ class Play extends Phaser.Scene {
     }
     this.score = this.add.text( game.config.width - 150,20, this.score, tempScoreConfig);
     this.score.setDepth(2);
+
     // Create player and turkey
     this.runner = new Runner(this, game.settings.playerStartPosition, game.config.height/2, 'runner_atlas').setOrigin(0.5, 1);
     this.turkey = new Turkey(this, game.settings.turkeyPosition, game.config.height/2, 'turkey_atlas').setOrigin(0.5, 1);
     this.turkey.setDepth(1);
+
     // Create ground
     this.anims.create({
       key: 'groundAnim',
@@ -111,13 +118,17 @@ class Play extends Phaser.Scene {
       this.runner.setVelocityY(-2500)
       if( !this.lose.isPlaying)this.lose.play()
     });
+
     // Create Obstacles
     this.obstacles = new ObstacleManager(this, ['jumpObs', 'slideObs']);
     this.timeSinceLastObstacle = 0;
+
     // Incrementing numbers for obstacle spawns
     this.speedMod = 1;
+
     // Game Over state
     this.gameOver = false;
+    
     // Scaling speed timer
     this.speedScaling = this.time.addEvent({ delay: game.settings.obstacleScaleTime, callback: () => {
       if(this.speedMod <= game.settings.obstacleMaxScale) {
@@ -135,8 +146,11 @@ class Play extends Phaser.Scene {
 
   update(time, delta) {
     // Scene Swapping on game over
-    if(this.gameOver) {
-      if (Phaser.Input.Keyboard.JustDown(keyLEFT)) this.scene.start('menuScene');
+    if (this.gameOver) {
+      if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        this.bgMusic.stop();  // Stop music from overlapping
+        this.scene.start('menuScene');
+      }
       if (this.playerScore > highScore) highScore = this.playerScore;
       this.turkey.rush();
     }
@@ -176,7 +190,7 @@ class Play extends Phaser.Scene {
       // Check if player is offscreen
       if(this.runner.x < 0 || this.runner.x > game.config.width || this.runner.y < 0) {
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.gameOverText).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT to restart', this.gameOverText).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT to MENU', this.gameOverText).setOrigin(0.5);
         this.gameOver = true;
         this.runner.destroy()
       }
