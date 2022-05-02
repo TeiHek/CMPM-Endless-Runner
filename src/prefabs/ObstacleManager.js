@@ -26,11 +26,10 @@
     addObstacle() {
         let obstacle;
         if(Phaser.Math.Between(0,1)) {
-            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize*5.25, this.textures[1]).setOrigin(1); // NOTE: Y param is placeholder value
+            obstacle = this.activeObstacleGroup.create(game.config.width, 0, this.textures[1]).setOrigin(0);
             obstacle.canSlide = true;
         } else {
-            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize, this.textures[0]).setOrigin(1); // NOTE: Y param is placeholder value
-            obstacle.canSlide = false;
+            obstacle = this.activeObstacleGroup.create(game.config.width, game.config.height - groundSize, this.textures[0]).setOrigin(1);
         }
         // console.log(obstacle.body.velocity);
         // console.log(this.activeObstacleGroup.getLength());
@@ -48,7 +47,7 @@
 
     cleanOffscreen() {
         let front = this.activeObstacleGroup.getFirstAlive()
-        if(front && front.x < 0) {
+        if(front && front.x + front.width < 0) {
           this.activeObstacleGroup.killAndHide(front);
           this.activeObstacleGroup.remove(front);
         }

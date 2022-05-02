@@ -9,11 +9,13 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         console.log(this.body)
         scene.anims.create({
             key: 'run',
-            defaultTextureKey: texture,
-            frames: [
-                { frame: 'run'}
-            ],
-            frameRate: 1,
+            frames: this.anims.generateFrameNames(texture, {
+                prefix: 'Sprite-0001 ',
+                start: 0,
+                end: 5,
+                suffix: '.aseprite',
+            }),
+            frameRate: 10,
             repeat: -1
         });
 
@@ -21,32 +23,48 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             key: 'slide',
             defaultTextureKey: texture,
             frames: [
-                { frame: 'slide'}
+                { frame: 'Sprite-0001 6.aseprite'}
+            ],
+            frameRate: 1,
+            repeat: -1
+        });
+
+        scene.anims.create({
+            key: 'jump',
+            defaultTextureKey: texture,
+            frames: [
+                { frame: 'Sprite-0001 7.aseprite'}
             ],
             frameRate: 1,
             repeat: -1
         });
 
         this.jumpSfx = scene.sound.add('jump');
+        this.play('run', true);
     }
 
     update(time, delta) {
         // console.log(this.y);
+        if(this.body.touching.down) {
+            if(keyDOWN.isDown) {
+                this.jumpCooldown = game.settings.playerJumpCooldown;
+                this.play('slide');
+                this.isSliding = true;
+                this.body.setSize();
+            } else {
+                this.play('run', true);
+                this.isSliding = false;
+                this.jumpCooldown -= delta;
+                this.body.setSize();
+            }
+        } else {
+            this.play('jump');
+        }
+
         // Jumping
         if(Phaser.Input.Keyboard.JustDown(keyUP) && this.body.touching.down && this.jumpCooldown <= 0) {
             this.jumpSfx.play()
             this.setVelocityY(game.settings.jumpForce * -1)
-        }
-        if(keyDOWN.isDown && this.body.touching.down) {
-            this.jumpCooldown = game.settings.playerJumpCooldown;
-            this.play('slide');
-            this.isSliding = true;
-            this.body.setSize();
-        } else {
-            this.play('run');
-            this.isSliding = false;
-            this.jumpCooldown -= delta;
-            this.body.setSize();
         }
         // Debug button
         // if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) this.pushBack(1);

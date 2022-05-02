@@ -7,6 +7,9 @@ class Menu extends Phaser.Scene {
         this.load.image('title', './assets/Turkey_Title_Screen.png')
         this.load.image('control', './assets/Control_Screen.png')
         this.load.image('credits', './assets/Credit_Screen.png')
+        this.load.audio('start', './assets/start_turkey_noise.wav');
+        this.load.audio('fwd', './assets/menufwd.wav');
+        this.load.audio('back', './assets/menuback.wav');
     }
 
     create() {
@@ -29,8 +32,8 @@ class Menu extends Phaser.Scene {
             fixedWidth: 300
         }
         // Add Credits, Control, Menu screens
-        this.add.image(0, 0, 'title').setOrigin(0);
-        this.add.text(115, 300, 'High score: ' + highScore, menuConfig);
+        this.menu = this.add.image(0, 0, 'title').setOrigin(0);
+        this.hs = this.add.text(115, 300, 'High score: ' + highScore, menuConfig);
         this.control = this.add.image(0,0, 'control').setOrigin(0);
         this.credits = this.add.image(0,0, 'credits').setOrigin(0);
         this.control.visible = false;
@@ -54,13 +57,31 @@ class Menu extends Phaser.Scene {
             turkeyPosition: 100,
             turkeyRushCooldown: 500
         }
+
+        this.startSFX = this.sound.add('start');
+        this.fwdSFX = this.sound.add('fwd');
+        this.backSFX = this.sound.add('back');
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(keyRIGHT) && !this.control.visible && !this.credits.visible) this.scene.start('playScene');
-        if (Phaser.Input.Keyboard.JustDown(keyUP) && !this.control.visible && !this.credits.visible) this.control.visible = true;
-        if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.control.visible && !this.credits.visible) this.credits.visible = true;
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (Phaser.Input.Keyboard.JustDown(keyRIGHT) && !this.control.visible && !this.credits.visible && !this.startSFX.isPlaying) {
+            this.startSFX.play()
+            this.menu.visible = false;
+            this.hs.visible = false;
+            this.time.delayedCall(800, () => {
+                this.scene.start('playScene');
+              }, null, this);
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyUP) && !this.control.visible && !this.credits.visible) {
+            this.fwdSFX.play();
+            this.control.visible = true;
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.control.visible && !this.credits.visible) {
+            this.fwdSFX.play();
+            this.credits.visible = true;
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyLEFT) && (this.control.visible || this.credits.visible)) {
+            this.backSFX.play();
             this.control.visible = false;
             this.credits.visible = false;
         }

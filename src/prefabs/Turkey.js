@@ -75,8 +75,8 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
     // Fly (originally meant for fireball)
     shoot() {
         this.setAccelerationY(-2400);
-        let target = new Phaser.Math.Vector2(this.x, this.y - 100);
-        this.scene.physics.moveToObject(this, target, 175);
+        let target = new Phaser.Math.Vector2(this.x, this.y - 150);
+        this.scene.physics.moveToObject(this, target, 250);
         this.setAccelerationX(800);
     }
 

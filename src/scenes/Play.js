@@ -6,17 +6,18 @@ class Play extends Phaser.Scene {
   preload() {
     this.load.spritesheet('ground', './assets/ground_tile2.png', {frameWidth: 99, frameHeight: 99, startFrame: 0, endFrame: 10});
     this.load.atlas('runner_atlas', './assets/playersheet.png', './assets/playersheet.json');
-    this.load.image('jumpObs', './assets/obstacle1.png');
-    this.load.image('slideObs', './assets/obstacle2.png');
+    this.load.image('jumpObs', './assets/rock.png');
+    this.load.image('slideObs', './assets/vine.png');
     this.load.image('skyBG', './assets/sky_layer.png');
-    this.load.image('treeFront', './assets/wip.png');
-    this.load.image('treeLeaf', './assets/wip2.png');
+    this.load.image('treeFront', './assets/trees_front.png');
+    this.load.image('treeLeaf', './assets/tree_leaves.png');
     this.load.image('treeBG0', './assets/trees_layer_0.png');
     this.load.image('treeBG1', './assets/trees_layer_1.png');
     this.load.image('treeBG2', './assets/trees_layer_2.png');
     this.load.atlas('turkey_atlas', './assets/turkey_sheet.png', './assets/turkey_sheet.json')
     this.load.audio('jump', './assets/jump.wav');
     this.load.audio('hurt', './assets/hurt.wav');
+    this.load.audio('lose', './assets/lose.wav');
   }
 
   create() {
@@ -51,10 +52,10 @@ class Play extends Phaser.Scene {
     // Score
     this.playerScore = 0
     let tempScoreConfig = {
-      fontFamily: 'Courier',
-      fontSize: '28px',
+      fontFamily: 'FreePixel',
+      fontSize: '32px',
       backgroundColor: '#F3B141',
-      color: '#843605',
+      color: '#000000',
       align: 'right',
       padding: {
           top: 5,
@@ -62,10 +63,24 @@ class Play extends Phaser.Scene {
       },
       fixedWidth: 100
     }
+    this.gameOverText = {
+      fontFamily: 'FreePixel',
+      fontSize: '32px',
+      backgroundColor: '#000000',
+      color: '#FFFFFF',
+      align: 'right',
+      padding: {
+          top: 5,
+          bottom: 5,
+      },
+      fixedWidth: 0
+    }
     this.score = this.add.text( game.config.width - 150,20, this.score, tempScoreConfig);
+    this.score.setDepth(2);
     // Create player and turkey
     this.runner = new Runner(this, game.settings.playerStartPosition, game.config.height/2, 'runner_atlas').setOrigin(0.5, 1);
     this.turkey = new Turkey(this, game.settings.turkeyPosition, game.config.height/2, 'turkey_atlas').setOrigin(0.5, 1);
+    this.turkey.setDepth(1);
     // Create ground
     this.anims.create({
       key: 'groundAnim',
@@ -92,11 +107,12 @@ class Play extends Phaser.Scene {
     this.playerHit = false;
     this.physics.add.collider(this.runner, this.turkey, () => {
       this.playerHit = true;
-      this.runner.pushBack(-2)
+      //this.runner.pushBack(-2)
+      this.runner.setVelocityY(-2500)
+      this.lose.play()
     });
     // Create Obstacles
     this.obstacles = new ObstacleManager(this, ['jumpObs', 'slideObs']);
-    
     this.timeSinceLastObstacle = 0;
     // Incrementing numbers for obstacle spawns
     this.speedMod = 1;
@@ -113,6 +129,8 @@ class Play extends Phaser.Scene {
     // Timer to swap between turkey and obstacles
     this.turkeyActive = false;
     this.swapTimer = this.time.delayedCall(game.settings.swapTime, this.resetSwap, null, this);
+
+    this.lose = this.sound.add('lose');
   }
 
   update(time, delta) {
@@ -120,6 +138,7 @@ class Play extends Phaser.Scene {
     if(this.gameOver) {
       if (Phaser.Input.Keyboard.JustDown(keyLEFT)) this.scene.start('menuScene');
       if (this.playerScore > highScore) highScore = this.playerScore;
+      this.turkey.rush();
     }
     
     // Turkey anims, since turkey.update is not always called
@@ -155,16 +174,11 @@ class Play extends Phaser.Scene {
       this.turkey.checkOffscreen();
 
       // Check if player is offscreen
-      if(this.runner.x < 0 || this.runner.x > game.config.width) {
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER').setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT to restart').setOrigin(0.5);
+      if(this.runner.x < 0 || this.runner.x > game.config.width || this.runner.y < 0) {
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.gameOverText).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT to restart', this.gameOverText).setOrigin(0.5);
         this.gameOver = true;
-      }
-
-      // Player touches turkey but turkey is not active
-      if(!this.turkeyActive && this.playerHit) {
-        this.turkey.rush();
-        this.turkeyActive = true;
+        this.runner.destroy()
       }
     }
   }
