@@ -55,20 +55,20 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         if (this.body.velocity.x > game.settings.playerMaxVelocity && this.x < game.settings.playerMaxPosition) {
             this.setVelocityX(game.settings.playerMaxVelocity);
             this.setAccelerationX(0);
-            console.log("Speed capped!");
+            //console.log("Speed capped!");
         }
 
         // Stops velocity when the player reaches a certain portion of the screen
         if (this.x > game.settings.playerMaxPosition && this.body.velocity.x > 0) {
             this.setVelocityX(0);
             this.setAccelerationX(0);
-            console.log("Distance capped!");
+            //console.log("Distance capped!");
         }
 
         if(this.x < game.settings.playerMaxPosition && this.body.acceleration.x <= 0 && this.body.velocity.x == 0){
             this.setAccelerationX(game.settings.playerAcceleration);
             this.setDragX(0);
-            console.log("!!!");
+            //console.log("!!!");
         }
         //console.log(this.body.velocity.x);
     }
@@ -76,7 +76,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
     pushBack(speedMod) {
         this.setAccelerationX(0);
         this.setVelocityX(game.settings.playerBasePush * -1 * speedMod);
-        this.setDragX(200 * speedMod);
-        console.log('Boop!');
+        if(speedMod > 0) this.setDragX(200 * speedMod);
+        //console.log('Boop!');
     }
 }

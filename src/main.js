@@ -19,7 +19,7 @@ let config = {
 
 let game = new Phaser.Game(config);
 // Reserve key names
-let keySPACE, keyUP, keyDOWN, keyLEFT, keyRIGHT;
+let keyUP, keyDOWN, keyLEFT, keyRIGHT;
 let groundSize = 99;
 let highScore = 0;
 

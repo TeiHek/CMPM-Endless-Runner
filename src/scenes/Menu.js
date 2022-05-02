@@ -3,26 +3,38 @@ class Menu extends Phaser.Scene {
         super("menuScene");
     }
 
+    preload() {
+        this.load.image('title', './assets/Turkey_Title_Screen.png')
+        this.load.image('control', './assets/Control_Screen.png')
+        this.load.image('credits', './assets/Credit_Screen.png')
+    }
+
     create() {
         // Define keys
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         // menu text configuration
         let menuConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            fontFamily: 'FreePixel',
+            fontSize: '32px',
+            backgroundColor: '#050505',
+            color: '#FFFFFF',
             align: 'left',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 0
+            fixedWidth: 300
         }
-        // show menu text
-        this.add.text(20, 20, 'Menu', menuConfig);
-        this.add.text(20, 80, 'Press Right to go to Play scene', menuConfig);
-        this.add.text(20, 140, 'High score: ' + highScore, menuConfig)
+        // Add Credits, Control, Menu screens
+        this.add.image(0, 0, 'title').setOrigin(0);
+        this.add.text(115, 300, 'High score: ' + highScore, menuConfig);
+        this.control = this.add.image(0,0, 'control').setOrigin(0);
+        this.credits = this.add.image(0,0, 'credits').setOrigin(0);
+        this.control.visible = false;
+        this.credits.visible = false;
         game.settings = {
             jumpForce: 1250,
             playerStartPosition: 400,
@@ -45,6 +57,12 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-        if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) this.scene.start('playScene');
+        if (Phaser.Input.Keyboard.JustDown(keyRIGHT) && !this.control.visible && !this.credits.visible) this.scene.start('playScene');
+        if (Phaser.Input.Keyboard.JustDown(keyUP) && !this.control.visible && !this.credits.visible) this.control.visible = true;
+        if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.control.visible && !this.credits.visible) this.credits.visible = true;
+        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.control.visible = false;
+            this.credits.visible = false;
+        }
     }
 }

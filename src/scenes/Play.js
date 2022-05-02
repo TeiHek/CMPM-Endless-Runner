@@ -46,7 +46,6 @@ class Play extends Phaser.Scene {
     this.treeL0 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeBG0').setOrigin(0, 0);
     this.treeFront = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeFront').setOrigin(0, 0);
     this.treeLeaf = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'treeLeaf').setOrigin(0, 0);
-    this.treeFront.setDepth(2)
     this.treeLeaf.setDepth(2)
 
     // Score
@@ -93,6 +92,7 @@ class Play extends Phaser.Scene {
     this.playerHit = false;
     this.physics.add.collider(this.runner, this.turkey, () => {
       this.playerHit = true;
+      this.runner.pushBack(-2)
     });
     // Create Obstacles
     this.obstacles = new ObstacleManager(this, ['jumpObs', 'slideObs']);
