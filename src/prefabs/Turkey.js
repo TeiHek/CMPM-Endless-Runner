@@ -51,7 +51,7 @@ class Turkey extends Phaser.Physics.Arcade.Sprite {
             this.ready = false;
             this.rushCooldown = game.settings.turkeyRushCooldown;
             if(Phaser.Math.Between(0,1)) {
-                console.log('Fly');
+                //console.log('Fly');
                 this.isFlying = true;
                 this.play('turkeyFlyStart', true);
                 this.shoot();

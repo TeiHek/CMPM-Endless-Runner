@@ -184,11 +184,11 @@ class Play extends Phaser.Scene {
   }
 
   resetSwap() {
-    console.log('swapped!');
+    //console.log('swapped!');
     this.turkeyActive = !this.turkeyActive;
     let newTimer = Phaser.Math.Between(game.settings.minSwapTime, game.settings.maxSwapTime);
     //console.log(newTimer);
-    this.swapTimer = this.time.delayedCall(newTimer, this.resetSwap, null, this);;
+    if(!this.gameOver) this.swapTimer = this.time.delayedCall(newTimer, this.resetSwap, null, this);
     //console.log(this.swapTimer);
   }
 

@@ -72,11 +72,11 @@ class Menu extends Phaser.Scene {
                 this.scene.start('playScene');
               }, null, this);
         }
-        if (Phaser.Input.Keyboard.JustDown(keyUP) && !this.control.visible && !this.credits.visible) {
+        if (Phaser.Input.Keyboard.JustDown(keyUP) && !this.control.visible && !this.credits.visible && !this.startSFX.isPlaying) {
             this.fwdSFX.play();
             this.control.visible = true;
         }
-        if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.control.visible && !this.credits.visible) {
+        if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.control.visible && !this.credits.visible && !this.startSFX.isPlaying) {
             this.fwdSFX.play();
             this.credits.visible = true;
         }
