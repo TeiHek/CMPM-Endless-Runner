@@ -109,7 +109,7 @@ class Play extends Phaser.Scene {
       this.playerHit = true;
       //this.runner.pushBack(-2)
       this.runner.setVelocityY(-2500)
-      this.lose.play()
+      if( !this.lose.isPlaying)this.lose.play()
     });
     // Create Obstacles
     this.obstacles = new ObstacleManager(this, ['jumpObs', 'slideObs']);
