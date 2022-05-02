@@ -10,9 +10,13 @@ class Menu extends Phaser.Scene {
         this.load.audio('start', './assets/start_turkey_noise.wav');
         this.load.audio('fwd', './assets/menufwd.wav');
         this.load.audio('back', './assets/menuback.wav');
+        this.load.audio('music', './assets/soundtrack.wav');
     }
 
     create() {
+        // Stop music to prevent overlapping from previous gameplays
+        
+
         // Define keys
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
