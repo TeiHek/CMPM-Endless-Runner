@@ -2,6 +2,8 @@
 
 CMPM 120 Endless Runner Project
 
+Play game here: https://teihek.github.io/CMPM-Endless-Runner/
+
 
 Credits:
 
