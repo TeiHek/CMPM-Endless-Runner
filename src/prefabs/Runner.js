@@ -39,7 +39,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             repeat: -1
         });
 
-        this.jumpSfx = scene.sound.add('jump',{volume: 0.75});
+        this.jumpSfx = scene.sound.add('jump',{volume: 0.6});
         this.play('run', true);
     }
 
