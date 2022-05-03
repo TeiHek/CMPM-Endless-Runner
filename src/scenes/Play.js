@@ -190,7 +190,7 @@ class Play extends Phaser.Scene {
       // Check if player is offscreen
       if(this.runner.x < 0 || this.runner.x > game.config.width || this.runner.y < 0) {
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.gameOverText).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT to MENU', this.gameOverText).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height* 2/3, 'Press LEFT for MENU', this.gameOverText).setOrigin(0.5);
         this.gameOver = true;
         this.runner.destroy()
       }
