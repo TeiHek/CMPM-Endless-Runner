@@ -10,7 +10,7 @@
         });
         // Add collisions for obstalces and player
         scene.physics.add.overlap(scene.runner, this.activeObstacleGroup, this.handleCollision, null, this);
-        this.hurtSfx = scene.sound.add('hurt');
+        this.hurtSfx = scene.sound.add('hurt',{volume: 0.75});
         
         this.scene = scene;
         this.textures = textures;
