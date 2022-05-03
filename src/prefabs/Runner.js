@@ -59,6 +59,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             }
         } else {
             this.play('jump');
+            this.body.setSize();
         }
 
         // Jumping
